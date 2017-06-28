@@ -1,0 +1,41 @@
+{
+  "name": "gulp-cache-files",
+  "version": "0.0.1",
+  "description": "Gulp plugin for cache files",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --reporter spec",
+    "cover": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/starksider/gulp-cache-files.git"
+  },
+  "keywords": [
+    "manifest",
+    "cache",
+    "mtime",
+    "asset",
+    "gulp",
+    "gulpplugin"
+  ],
+  "author": "Starksider <starksider@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/starksider/gulp-cache-files/issues"
+  },
+  "homepage": "https://github.com/starksider/gulp-cache-files#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "coveralls": "^2.11.11",
+    "gulp": "^3.9.1",
+    "istanbul": "^0.4.4",
+    "mocha": "^3.4.2"
+  },
+  "dependencies": {
+    "gulp-if": "^2.0.2",
+    "gulp-util": "^3.0.8",
+    "kew": "^0.7.0",
+    "through2": "^2.0.1"
+  }
+}
