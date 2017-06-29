@@ -129,9 +129,19 @@ describe(PLUGIN_NAME, function () {
   describe('manifest file content test', function() {
     var cacheFiles = new CacheFiles();
     var manifestPath = './manifest-content/manifest.json';
+    var cachePath = './cache/cache.json';
+    var mtimes = {};
+    // Before - find timestamps
+    before(function() {
+      gulp.src('./test/fixtures/*')
+        .on('data', function(file) {
+          mtimes[file.relative] = file.stat.mtime.getTime();
+        });
+    });
     // After - Clean up test directory
-    after(function () {
+    after(function() {
       rmFileWithDir(manifestPath);
+      rmFileWithDir(cachePath);
     });
 
     it('should write correct object with relative path as key and mtime as value', function(done) {
@@ -142,7 +152,7 @@ describe(PLUGIN_NAME, function () {
           setTimeout(function(){
             fs.readFile(manifestPath,'utf8', function(err, data) {
               throwErr(err);
-              expect(JSON.parse(data)).to.deep.equal({'bar.jpg': 1497469353060,'baz.jpg': 1498305680835,'foo.jpg': 1497469353063});
+              expect(JSON.parse(data)).to.deep.equal(mtimes);
               done();
             });
           }, 300);
@@ -152,7 +162,7 @@ describe(PLUGIN_NAME, function () {
     it('should write correct mtime as value if file was changed', function(done) {
       var changeTime;
       gulp.src('./test/fixtures-changed/*', {read: false})
-        .pipe(cacheFiles.filter(manifestPath))
+        .pipe(cacheFiles.filter(cachePath))
         .on('data', function (file) {
           if(file.relative === 'baz.jpg'){
             var time = new Date();
@@ -163,7 +173,7 @@ describe(PLUGIN_NAME, function () {
         .pipe(cacheFiles.manifest())
         .on('finish', function(){
           setTimeout(function(){
-            fs.readFile(manifestPath,'utf8', function(err, data) {
+            fs.readFile(cachePath,'utf8', function(err, data) {
               throwErr(err);
               assert.equal(JSON.parse(data)['baz.jpg'], changeTime);
               done();
