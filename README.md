@@ -1,4 +1,5 @@
 # gulp-cache-files
+[![bitHound Dependencies](https://www.bithound.io/github/starksider/gulp-cache-files/badges/dependencies.svg)](https://www.bithound.io/github/starksider/gulp-cache-files/master/dependencies/npm)
 
 A disk based files caching task for [gulp](http://gulpjs.com/). This plugin based on file [mtime](https://en.wikipedia.org/wiki/Mtime) by default (could use another file property after some configurations see below) it writes json file with formatted relative path as key and mtime as value. One of the main features of this plugin is that it can deal with projects where source folder is dist folder (it could be useful for saving disk space when you have a lot of images in project).
 
@@ -6,11 +7,11 @@ A disk based files caching task for [gulp](http://gulpjs.com/). This plugin base
 Install package with NPM and add it to your development dependencies:  
 
 ```
-npm install gulp-cache-files
+npm install --save-dev gulp-cache-files
 ```
 
 ## Examples
-Basic example of using the cache to manage image minification with the imagemin module.
+**Basic example of using the cache to manage image minification with the imagemin module.**
 
 ```javascript
 var gulp = require('gulp');
@@ -19,7 +20,8 @@ var cacheFiles = require('gulp-cache-files');
 
 gulp.task('images', function() {
   return gulp.src('./images/*.{jpg,png,jpeg,gif,svg}', {read: false})
-    // Specify the location and name of the cache file or use it without parameter (creates default file)
+    // Specify the location and name of the cache file
+    //or use it without parameter (creates default file)
     .pipe(cacheFiles.filter('./mycache/manifest.json'))
     .pipe(imagemin({
       verbose: true
@@ -28,12 +30,14 @@ gulp.task('images', function() {
     .pipe(cacheFiles.manifest());
 });
 ```
-{read: false} option used to do not load file contents, which increases performance (file contents will be passed through the pipeline inside filter function)
+`{read: false}` option used to do not load file contents, which increases performance (file contents will be passed through the pipeline inside filter function)
+
 This will create a cache file named `manifest.json` of all files passed through the pipeline to be excluded from subsequent runs. If a file that has been cached is updated, the cache will recognize this and pass the file through to update it in the manifest.json file.
+
 *cache file (`manifest.json`) could be added to version control for saving time of other developers
 
-When you need 2 or more uses of gulp-cache-files module you should use Prototype as on example below:
 
+**When you need 2 or more uses of gulp-cache-files module you should use** `require('gulp-cache-files').Prototype` **as on example below:**
 ```javascript
 var gulp = require('gulp');
 var imagemin = require('gulp-imagemin');
@@ -60,7 +64,7 @@ gulp.task('jshint', function() {
 });
 ```
 
-Use of manifest function separately from filter function:
+**Use of manifest function separately from filter function:**
 
 ```javascript
 var gulp = require('gulp');
@@ -72,12 +76,12 @@ gulp.task('store-mtimes', function() {
     .pipe(gulp.dest('.'));
 });
 ```
-it just writes file.stat.mtime.geеTime() as value and formatted* relative path as key into file 'files-mtimes.json'
+it just writes file.stat.mtime.getTime() as value and formatted* relative path as key into file 'files-mtimes.json'
+
 *formatted means that it replaces Windows backslashes with such rule `path.replace(/\\/g, '/')`
 
-Compare custom file properties:
 
-
+**Compare custom file properties:**
 ```javascript
 var gulp = require('gulp');
 var imagemin = require('gulp-imagemin');
@@ -114,40 +118,51 @@ gulp.task('images', function() {
 ## API
 ### `filter(dest)`
 * **dest** - `string` Path to cache file (manifest.json).
- *default:* - `'./gulp-cache-files/manifest.json'`
+
+  *default:* - `'./gulp-cache-files/manifest.json'`
 
 ### `filter(options)`
  * **options.dest** - `string` As above.
  * **options.comparator** - `function` Compares cached file property with uncached (by default it is file.stat.mtime)
- `options.comparator(criteria, file [, manifest])`
- **criteria** - Cached value from cache file (manifest.json)
- **file** - File object passed through stream
- **manifest** - (optional) Object where formatted relative path is a key and file property as a value `{"fixtures/foo.png":1497680208602,"fixtures/bar.png":1497680208623}`
- *default:*
+
+   `options.comparator(criteria, file [, manifest])`
+
+   **criteria** - Cached value from cache file (manifest.json)
+
+   **file** - File object passed through stream
+
+   **manifest** - (optional) Object where formatted relative path is a key and file property as a value `{"fixtures/foo.png":1497680208602,"fixtures/bar.png":1497680208623}`
+
+   *default:*
    ```javascript
-    function(criteria, file){
-        return criteria === file.stat.mtime.getTime();
-    }
+   function(criteria, file){
+     return criteria === file.stat.mtime.getTime();
+   }
    ```
 
 
 ### `manifest(name)`
  * **name** - `string` name of cache file. (works only if used in separate gulp task without filter function above)
- *default:* - `'manifest.json'`
+
+   *default:* - `'manifest.json'`
 
 ### `manifest(options)`
  * **options.name** - `string` As above.
  * **options.criteria** - `function` Returns property or [kew](https://www.npmjs.com/package/kew) promise with this property which will be stored in cache file as value {"fixtures/foo.png":**1497680208602**}
- `options.criteria(file)`
- **file** - File object passed through stream
- *default:*
+
+   `options.criteria(file)`
+
+   **file** - File object passed through stream
+
+   *default:*
    ```javascript
-        function(file) {
-            return Q.nfcall(fs.stat, file.path).then(function(stats) {
-                return stats.mtime.getTime();
-            });
-        }
+   function(file) {
+     return Q.nfcall(fs.stat, file.path).then(function(stats) {
+       return stats.mtime.getTime();
+     });
+   }
    ```
+
    `Q` here is just initialized instance of [kew](https://www.npmjs.com/package/kew) framework (`var Q = require('kew');`)
 
 ## License

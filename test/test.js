@@ -100,7 +100,7 @@ describe(PLUGIN_NAME, function () {
             assert.equal(filesAmount, 0);
             done();
           });
-      }, 200)
+      }, 200);
     });
 
     it('should add file into stream if it was modified', function(done) {
@@ -122,7 +122,7 @@ describe(PLUGIN_NAME, function () {
             assert.equal(filesAmount, 1);
             done();
           });
-      }, 200)
+      }, 200);
     });
   });
 

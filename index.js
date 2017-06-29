@@ -98,7 +98,7 @@ Cache.prototype.manifest = function(options) {
     options = options || {};
 
     if (typeof options === 'string'){
-        options = {name: options}
+        options = {name: options};
     }
 
     var _this = this;
