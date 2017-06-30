@@ -1,5 +1,6 @@
 # gulp-cache-files
 [![bitHound Dependencies](https://www.bithound.io/github/starksider/gulp-cache-files/badges/dependencies.svg)](https://www.bithound.io/github/starksider/gulp-cache-files/master/dependencies/npm)
+[![Build Status](https://travis-ci.org/starksider/gulp-cache-files.svg?branch=master)](https://travis-ci.org/starksider/gulp-cache-files)
 
 A disk based files caching task for [gulp](http://gulpjs.com/). This plugin based on file [mtime](https://en.wikipedia.org/wiki/Mtime) by default (could use another file property after some configurations see below) it writes json file with formatted relative path as key and mtime as value. One of the main features of this plugin is that it can deal with projects where source folder is dist folder (it could be useful for saving disk space when you have a lot of images in project).
 
