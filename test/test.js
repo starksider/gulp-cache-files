@@ -168,7 +168,7 @@ describe(PLUGIN_NAME, function () {
           if(file.relative === 'baz.jpg'){
             var time = new Date();
             console.log(time);
-            changeTime = time.getTime();
+            changeTime = time;
             console.log(changeTime);
             fs.utimes(file.path, time, time, function(){});
           }
@@ -180,7 +180,7 @@ describe(PLUGIN_NAME, function () {
               throwErr(err);
               console.log(changeTime, JSON.parse(data)['baz.jpg']);
               console.log(JSON.parse(data));
-              assert.equal(JSON.parse(data)['baz.jpg'], changeTime);
+              assert.equal(JSON.parse(data)['baz.jpg'], changeTime.getTime());
               done();
             });
           }, 400);
