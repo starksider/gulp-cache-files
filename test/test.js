@@ -127,7 +127,6 @@ describe(PLUGIN_NAME, function () {
   });
 
   describe('manifest file content test', function() {
-    var cacheFiles = new CacheFiles();
     var manifestPath = './manifest-content/manifest.json';
     var cachePath = './cache/cache.json';
     var mtimes = {};
@@ -145,6 +144,7 @@ describe(PLUGIN_NAME, function () {
     });
 
     it('should write correct object with relative path as key and mtime as value', function(done) {
+      var cacheFiles = new CacheFiles();
       gulp.src('./test/fixtures/*', {read: false})
         .pipe(cacheFiles.filter(manifestPath))
         .pipe(cacheFiles.manifest())
@@ -160,13 +160,16 @@ describe(PLUGIN_NAME, function () {
     });
 
     it('should write correct mtime as value if file was changed', function(done) {
+      var cacheFiles = new CacheFiles();
       var changeTime;
       gulp.src('./test/fixtures-changed/*', {read: false})
         .pipe(cacheFiles.filter(cachePath))
         .on('data', function (file) {
           if(file.relative === 'baz.jpg'){
             var time = new Date();
+            console.log(time);
             changeTime = time.getTime();
+            console.log(changeTime);
             fs.utimes(file.path, time, time, function(){});
           }
         })
@@ -175,6 +178,8 @@ describe(PLUGIN_NAME, function () {
           setTimeout(function(){
             fs.readFile(cachePath,'utf8', function(err, data) {
               throwErr(err);
+              console.log(changeTime, JSON.parse(data)['baz.jpg']);
+              console.log(JSON.parse(data));
               assert.equal(JSON.parse(data)['baz.jpg'], changeTime);
               done();
             });
