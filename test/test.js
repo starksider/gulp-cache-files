@@ -166,10 +166,8 @@ describe(PLUGIN_NAME, function () {
         .pipe(cacheFiles.filter(cachePath))
         .on('data', function (file) {
           if(file.relative === 'baz.jpg'){
-            var time = new Date();
-            console.log(time);
-            changeTime = time;
-            console.log(changeTime);
+            var time = Math.floor(new Date().getTime() / 1000);
+            changeTime = time * 1000;
             fs.utimes(file.path, time, time, function(){});
           }
         })
@@ -178,9 +176,7 @@ describe(PLUGIN_NAME, function () {
           setTimeout(function(){
             fs.readFile(cachePath,'utf8', function(err, data) {
               throwErr(err);
-              console.log(changeTime, JSON.parse(data)['baz.jpg']);
-              console.log(JSON.parse(data));
-              assert.equal(JSON.parse(data)['baz.jpg'], changeTime.getTime());
+              assert.equal(JSON.parse(data)['baz.jpg'], changeTime);
               done();
             });
           }, 400);
